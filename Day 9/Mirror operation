@@ -1,0 +1,55 @@
+Problem: A secret system stores code names in forward order. To display them in mirror format, you must transform the given code name so that its characters appear in the opposite order.
+
+Input:
+- Single line: a lowercase string containing only alphabetic characters (no spaces)
+
+Output:
+- Print the transformed code name after applying the mirror operation
+
+Example:
+Input:
+hello
+
+Output:
+olleh
+
+Explanation: The first character moves to the last position, the second to the second-last, and so on until the entire string is mirrored
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <string.h>
+
+void mirrorString(char* str) {
+    int length = strlen(str);
+    int start = 0;
+    int end = length - 1;
+    char temp;
+
+    // Use a loop to swap characters from outer edges toward the middle
+    while (start < end) {
+        // Perform the swap using a temporary variable
+        temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+
+        // Move the pointers
+        start++;
+        end--;
+    }
+}
+
+int main() {
+    char codeName[1001]; // Buffer for up to 1000 characters
+
+    // Read the input string
+    if (scanf("%1000s", codeName) == 1) {
+        mirrorString(codeName);
+        
+        // Print the mirrored output
+        printf("%s\n", codeName);
+    }
+
+    return 0;
+}
+
