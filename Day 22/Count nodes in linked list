@@ -1,0 +1,83 @@
+Problem: Count Nodes in Linked List
+
+Input:
+- First line: integer n
+- Second line: n space-separated integers
+
+Output:
+- Print the result
+
+Example:
+Input:
+5
+10 20 30 40 50
+
+Output:
+10 20 30 40 50
+
+-----------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to count nodes in the list
+int countNodes(struct Node* head) {
+    int count = 0;
+    struct Node* current = head;
+    while (current != NULL) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+// Function to print the list elements
+void printList(struct Node* head) {
+    struct Node* current = head;
+    while (current != NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int n, value;
+    struct Node *head = NULL, *temp = NULL, *newNode = NULL;
+
+    // Read number of elements
+    if (scanf("%d", &n) != 1 || n <= 0) {
+        return 0; 
+    }
+
+    // Build the linked list
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &value);
+        newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = value;
+        newNode->next = NULL;
+
+        if (head == NULL) {
+            head = newNode;
+            temp = head;
+        } else {
+            temp->next = newNode;
+            temp = newNode;
+        }
+    }
+
+    // Output logic
+    // To match your example output (printing values):
+    printList(head);
+
+    // To output the count (as per the problem title):
+    // printf("%d\n", countNodes(head));
+
+    return 0;
+}
