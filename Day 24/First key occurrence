@@ -1,0 +1,110 @@
+Problem: Delete First Occurrence of a Key - Implement using linked list with dynamic memory allocation.
+
+Input:
+- First line: integer n
+- Second line: n space-separated integers
+- Third line: integer key
+
+Output:
+- Print the linked list elements after deletion, space-separated
+
+Example:
+Input:
+5
+10 20 30 40 50
+30
+
+Output:
+10 20 40 50
+
+Explanation:
+Traverse list, find first node with key, remove it by adjusting previous node's next pointer.
+
+----------------------------------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure of a node
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to delete the first occurrence of a key
+void deleteKey(struct Node** head_ref, int key) {
+    struct Node *temp = *head_ref, *prev = NULL;
+
+    // Case 1: If head node itself holds the key
+    if (temp != NULL && temp->data == key) {
+        *head_ref = temp->next; // Changed head
+        free(temp);             // Free old head
+        return;
+    }
+
+    // Case 2: Search for the key, keep track of the previous node
+    while (temp != NULL && temp->data != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // If key was not present in linked list
+    if (temp == NULL) return;
+
+    // Case 3: Unlink the node from linked list
+    prev->next = temp->next;
+
+    free(temp); // Free memory
+}
+
+// Function to add a node at the end (for building the list)
+void append(struct Node** head_ref, int new_data) {
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* last = *head_ref;
+    new_node->data = new_data;
+    new_node->next = NULL;
+
+    if (*head_ref == NULL) {
+        *head_ref = new_node;
+        return;
+    }
+
+    while (last->next != NULL) {
+        last = last->next;
+    }
+    last->next = new_node;
+}
+
+// Function to print the linked list
+void printList(struct Node* node) {
+    while (node != NULL) {
+        printf("%d ", node->data);
+        node = node->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Node* head = NULL;
+    int n, val, key;
+
+    // Read input size
+    if (scanf("%d", &n) != 1) return 0;
+
+    // Read n elements
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        append(&head, val);
+    }
+
+    // Read key to delete
+    scanf("%d", &key);
+
+    // Perform deletion
+    deleteKey(&head, key);
+
+    // Output result
+    printList(head);
+
+    return 0;
+}
