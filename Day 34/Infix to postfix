@@ -1,0 +1,96 @@
+Problem: Convert an infix expression to postfix notation using stack.
+
+Input:
+- Single line: infix expression (operands are single characters)
+
+Output:
+- Print the postfix expression
+
+Example:
+Input:
+A+B*C
+
+Output:
+ABC*+
+
+Explanation:
+Operator precedence: * > +
+Use stack to handle operator precedence and associativity
+
+-----------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+// Push element to stack
+void push(char x) {
+    if (top < MAX - 1) {
+        stack[++top] = x;
+    }
+}
+
+// Pop element from stack
+char pop() {
+    if (top == -1) {
+        return -1;
+    }
+    return stack[top--];
+}
+
+// Define operator precedence
+int precedence(char x) {
+    if (x == '(') return 0;
+    if (x == '+' || x == '-') return 1;
+    if (x == '*' || x == '/') return 2;
+    if (x == '^') return 3;
+    return 0;
+}
+
+int main() {
+    char infix[MAX], x;
+    int i = 0;
+
+    printf("Enter infix expression: ");
+    scanf("%s", infix);
+
+    printf("Postfix expression: ");
+    
+    while (infix[i] != '\0') {
+        // If operand, print it
+        if (isalnum(infix[i])) {
+            printf("%c", infix[i]);
+        } 
+        // If opening bracket, push to stack
+        else if (infix[i] == '(') {
+            push(infix[i]);
+        } 
+        // If closing bracket, pop until '(' is found
+        else if (infix[i] == ')') {
+            while ((x = pop()) != '(') {
+                printf("%c", x);
+            }
+        } 
+        // If operator
+        else {
+            while (top != -1 && precedence(stack[top]) >= precedence(infix[i])) {
+                printf("%c", pop());
+            }
+            push(infix[i]);
+        }
+        i++;
+    }
+
+    // Pop remaining operators
+    while (top != -1) {
+        printf("%c", pop());
+    }
+
+    printf("\n");
+    return 0;
+}
