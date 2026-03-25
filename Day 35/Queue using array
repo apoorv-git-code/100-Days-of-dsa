@@ -1,0 +1,83 @@
+Problem: Queue Using Array - Implement using linked list with dynamic memory allocation.
+
+Input:
+- First line: integer n (number of elements)
+- Second line: n space-separated integers
+
+Output:
+- Print queue elements from front to rear, space-separated
+
+Example:
+Input:
+5
+10 20 30 40 50
+
+Output:
+10 20 30 40 50
+
+Explanation:
+Use array and front/rear pointers. Enqueue inserts at rear, dequeue removes from front. Display from front to rear.
+
+--------------------------------------------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Queue {
+    int front, rear, capacity;
+    int* array;
+};
+
+// Function to create a queue of given capacity
+struct Queue* createQueue(int n) {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->capacity = n;
+    queue->front = 0;
+    queue->rear = -1;
+    // Dynamic memory allocation for the array
+    queue->array = (int*)malloc(queue->capacity * sizeof(int));
+    return queue;
+}
+
+// Function to add an item to the queue (Enqueue)
+void enqueue(struct Queue* queue, int item) {
+    if (queue->rear == queue->capacity - 1) {
+        return; // Queue Full
+    }
+    queue->array[++queue->rear] = item;
+}
+
+// Function to print the queue from front to rear
+void display(struct Queue* queue) {
+    for (int i = queue->front; i <= queue->rear; i++) {
+        printf("%d", queue->array[i]);
+        if (i < queue->rear) {
+            printf(" ");
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int n, value;
+
+    // Read number of elements
+    if (scanf("%d", &n) != 1) return 0;
+
+    struct Queue* queue = createQueue(n);
+
+    // Read n elements and enqueue them
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &value);
+        enqueue(queue, value);
+    }
+
+    // Output the queue
+    display(queue);
+
+    // Clean up memory
+    free(queue->array);
+    free(queue);
+
+    return 0;
+}
