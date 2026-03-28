@@ -1,0 +1,93 @@
+Problem Statement:
+Construct a Binary Tree from the given level-order traversal.
+
+Input Format:
+- First line contains integer N
+- Second line contains N space-separated integers (-1 represents NULL)
+
+Output Format:
+- Print inorder traversal of the constructed tree
+
+Example:
+Input:
+7
+1 2 3 4 5 -1 6
+
+Output:
+4 2 5 1 3 6
+
+---------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for a tree node
+struct Node {
+    int data;
+    struct Node *left, *right;
+};
+
+// Queue for building the tree
+struct Node* queue[1000];
+int front = 0, rear = 0;
+
+void enqueue(struct Node* node) {
+    queue[rear++] = node;
+}
+
+struct Node* dequeue() {
+    return queue[front++];
+}
+
+// Function to create a new node
+struct Node* newNode(int val) {
+    if (val == -1) return NULL;
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = val;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+// Inorder Traversal: Left -> Root -> Right
+void inorder(struct Node* root) {
+    if (root == NULL) return;
+    inorder(root->left);
+    printf("%d ", root->data);
+    inorder(root->right);
+}
+
+int main() {
+    int n;
+    if (scanf("%d", &n) != 1 || n == 0) return 0;
+
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // 1. Create root and add to queue
+    struct Node* root = newNode(arr[0]);
+    if (root) enqueue(root);
+
+    int i = 1;
+    while (i < n && front < rear) {
+        struct Node* parent = dequeue();
+
+        // 2. Assign Left Child
+        if (i < n) {
+            parent->left = newNode(arr[i++]);
+            if (parent->left) enqueue(parent->left);
+        }
+
+        // 3. Assign Right Child
+        if (i < n) {
+            parent->right = newNode(arr[i++]);
+            if (parent->right) enqueue(parent->right);
+        }
+    }
+
+    inorder(root);
+    printf("\n");
+
+    return 0;
+}
