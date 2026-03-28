@@ -1,0 +1,82 @@
+Problem Statement:
+Given a queue of integers, reverse the queue using a stack.
+
+Input Format:
+- First line contains integer N
+- Second line contains N space-separated integers
+
+Output Format:
+- Print the reversed queue
+
+Example:
+Input:
+5
+10 20 30 40 50
+
+Output:
+50 40 30 20 10
+
+--------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 1000
+
+// Stack implementation
+int stack[MAX];
+int top = -1;
+
+void push(int x) {
+    stack[++top] = x;
+}
+
+int pop() {
+    return stack[top--];
+}
+
+// Queue implementation
+int queue[MAX];
+int front = 0, rear = 0;
+
+void enqueue(int x) {
+    queue[rear++] = x;
+}
+
+int dequeue() {
+    return queue[front++];
+}
+
+void reverseQueue(int n) {
+    // Step 1: Queue to Stack
+    for (int i = 0; i < n; i++) {
+        push(dequeue());
+    }
+
+    // Step 2: Stack back to Queue
+    // Reset pointers to reuse the queue array or append
+    front = 0; 
+    rear = 0;
+    for (int i = 0; i < n; i++) {
+        enqueue(pop());
+    }
+}
+
+int main() {
+    int n, val;
+    if (scanf("%d", &n) != 1) return 0;
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        enqueue(val);
+    }
+
+    reverseQueue(n);
+
+    // Print the reversed queue
+    for (int i = 0; i < n; i++) {
+        printf("%d%c", queue[i], (i == n - 1) ? '\n' : ' ');
+    }
+
+    return 0;
+}
