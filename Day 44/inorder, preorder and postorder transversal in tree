@@ -1,0 +1,100 @@
+Problem Statement:
+Perform inorder, preorder, and postorder traversals of a given binary tree.
+
+Input Format:
+- First line contains integer N
+- Second line contains level-order traversal (-1 represents NULL)
+
+Output Format:
+- Print inorder, preorder, and postorder traversals
+
+Example:
+Input:
+7
+1 2 3 4 5 6 7
+
+Output:
+4 2 5 1 6 3 7
+1 2 4 5 3 6 7
+4 5 2 6 7 3 1
+  
+--------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *left, *right;
+};
+
+// Standard helper to create nodes
+struct Node* newNode(int val) {
+    if (val == -1) return NULL;
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = val;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+// 1. Inorder: Left, Root, Right
+void printInorder(struct Node* node) {
+    if (node == NULL) return;
+    printInorder(node->left);
+    printf("%d ", node->data);
+    printInorder(node->right);
+}
+
+// 2. Preorder: Root, Left, Right
+void printPreorder(struct Node* node) {
+    if (node == NULL) return;
+    printf("%d ", node->data);
+    printPreorder(node->left);
+    printPreorder(node->right);
+}
+
+// 3. Postorder: Left, Right, Root
+void printPostorder(struct Node* node) {
+    if (node == NULL) return;
+    printPostorder(node->left);
+    printPostorder(node->right);
+    printf("%d ", node->data);
+}
+
+int main() {
+    int n;
+    if (scanf("%d", &n) != 1 || n <= 0) return 0;
+
+    int *arr = (int *)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+
+    // Build tree from level-order
+    struct Node* root = newNode(arr[0]);
+    struct Node** queue = (struct Node**)malloc(n * sizeof(struct Node*));
+    int front = 0, rear = 0;
+    
+    if (root) queue[rear++] = root;
+
+    int i = 1;
+    while (i < n && front < rear) {
+        struct Node* parent = queue[front++];
+        
+        if (i < n) {
+            parent->left = newNode(arr[i++]);
+            if (parent->left) queue[rear++] = parent->left;
+        }
+        if (i < n) {
+            parent->right = newNode(arr[i++]);
+            if (parent->right) queue[rear++] = parent->right;
+        }
+    }
+
+    // Execute and print traversals
+    printInorder(root);   printf("\n");
+    printPreorder(root);  printf("\n");
+    printPostorder(root); printf("\n");
+
+    free(arr);
+    free(queue);
+    return 0;
+}
