@@ -1,0 +1,103 @@
+Problem: Level Order Traversal
+
+Implement the solution for this problem.
+
+Input:
+- Input specifications
+
+Output:
+- Output specifications
+
+-----------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for a binary tree node
+struct Node {
+    int data;
+    struct Node *left, *right;
+};
+
+// Simple Queue Implementation for Level Order
+struct Node** createQueue(int *front, int *rear, int n) {
+    struct Node** queue = (struct Node**)malloc(sizeof(struct Node*) * n);
+    *front = *rear = 0;
+    return queue;
+}
+
+void enqueue(struct Node** queue, int *rear, struct Node* newNode) {
+    queue[(*rear)++] = newNode;
+}
+
+struct Node* dequeue(struct Node** queue, int *front) {
+    return queue[(*front)++];
+}
+
+// Function to print Level Order Traversal
+void printLevelOrder(struct Node* root, int n) {
+    int front, rear;
+    struct Node** queue = createQueue(&front, &rear, n);
+    struct Node* temp = root;
+
+    while (temp) {
+        printf("%d ", temp->data);
+
+        /* Enqueue left child */
+        if (temp->left)
+            enqueue(queue, &rear, temp->left);
+
+        /* Enqueue right child */
+        if (temp->right)
+            enqueue(queue, &rear, temp->right);
+
+        /* Dequeue node and make it temp */
+        if (front < rear)
+            temp = dequeue(queue, &front);
+        else
+            temp = NULL;
+    }
+    free(queue);
+}
+
+// Helper function to create a new node
+struct Node* newNode(int data) {
+    if (data == -1) return NULL;
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+int main() {
+    int n;
+    if (scanf("%d", &n) != 1) return 0;
+
+    int arr[n];
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+
+    // Build the tree (using the same logic from your previous height problem)
+    if (n == 0 || arr[0] == -1) return 0;
+    
+    struct Node* root = newNode(arr[0]);
+    struct Node* buildQ[n];
+    int f = 0, r = 0;
+    buildQ[r++] = root;
+    int i = 1;
+
+    while (i < n) {
+        struct Node* curr = buildQ[f++];
+        if (i < n) {
+            curr->left = newNode(arr[i++]);
+            if (curr->left) buildQ[r++] = curr->left;
+        }
+        if (i < n) {
+            curr->right = newNode(arr[i++]);
+            if (curr->right) buildQ[r++] = curr->right;
+        }
+    }
+
+    printLevelOrder(root, n);
+
+    return 0;
+}
