@@ -1,0 +1,77 @@
+Problem: BST Insert
+
+Implement the solution for this problem.
+
+Input:
+- Input specifications
+
+Output:
+- Output specifications
+
+---------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition of a Binary Search Tree Node
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Function to create a new node
+struct Node* newNode(int data) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+// Function to insert a value into the BST
+struct Node* insert(struct Node* root, int value) {
+    // 1. If the tree is empty, return a new node
+    if (root == NULL) {
+        return newNode(value);
+    }
+
+    // 2. Otherwise, recur down the tree
+    if (value < root->data) {
+        root->left = insert(root->left, value);
+    } else if (value > root->data) {
+        root->right = insert(root->right, value);
+    }
+
+    // Return the (unchanged) node pointer
+    return root;
+}
+
+// Function for Inorder traversal to verify insertion (Left, Root, Right)
+void inorder(struct Node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+int main() {
+    struct Node* root = NULL;
+
+    // Inserting values
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+
+    // The inorder traversal of a BST always produces sorted output
+    printf("Inorder traversal of the BST: ");
+    inorder(root);
+    printf("\n");
+
+    return 0;
+}
